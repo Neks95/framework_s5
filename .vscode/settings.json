@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/ojdbc11.jar",
+        "lib/servlet-api.jar"
+    ]
+}
