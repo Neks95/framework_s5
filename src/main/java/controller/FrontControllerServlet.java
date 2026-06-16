@@ -23,7 +23,6 @@ public class FrontControllerServlet extends HttpServlet {
     public void processRequest(HttpServletRequest req , HttpServletResponse res) throws IOException{
         res.setContentType("text/plain");
         PrintWriter out = res.getWriter();
-        out.println(controllerPackage);
         for(int i =0;i<listController.size();i++){
             out.println(listController.get(i));
         }
