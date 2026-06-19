@@ -20,6 +20,9 @@ public class Loader {
     }
 
     public static List<Class<?>> getClassesInPackage (String packageName) {
+        if(packageName == null){
+            packageName = "org.controller";
+        }
         List<Class<?>> classes = new ArrayList<>();
         String path = packageName.replace('.', '/');
         URL resource = Thread.currentThread()
