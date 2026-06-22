@@ -7,10 +7,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import main.java.exception.UrlNotFoundException;
 import main.java.itu.annotation.Controller;
 import main.java.itu.annotation.UrlMapping;
 import main.java.utils.Loader;
@@ -30,23 +32,32 @@ public class FrontControllerServlet extends HttpServlet {
         return mappingUrlMethod.get(path);
     }
 
-    public void processRequest(HttpServletRequest req , HttpServletResponse res) throws IOException{
-        String path = req.getContextPath();
-        Method m = processPath(path);
+    public void processRequest(HttpServletRequest req , HttpServletResponse res) throws IOException ,UrlNotFoundException{
+        String path = req.getRequestURI().substring(req.getContextPath().length());
         res.setContentType("text/plain");
         PrintWriter out = res.getWriter();
-        out.println("Liste des controller");
-        for(int i =0;i<listController.size();i++){
-            out.println(listController.get(i).getName());
-        }
-        out.println(m.getName());
+        try {
+            Method m = processPath(path);
+            if(m == null){
+                throw new UrlNotFoundException(path, mappingUrlMethod);
+            }
+            else{
+                out.println("METHODE : "+ m.getName() + " / CONTROLLER : "+ m.getDeclaringClass());
+            }
+        } catch (UrlNotFoundException e) {
+            out.println("L'url " + e.getUrl() + " n'est pas mappee à une méthode.");
+            out.println("Les urls dispo sont : ");
+            for (Map.Entry<String, Method> entry : e.getMap().entrySet()) {
+                out.println("- " + entry.getKey() + " : " + entry.getValue().getDeclaringClass().getName());
+            }
+        } 
     }
 
     public void doGet(HttpServletRequest req,HttpServletResponse res) throws IOException{
         processRequest(req, res);
     }
 
-    public void doPost(HttpServletRequest req,HttpServletResponse res) throws IOException {
+    public void doPost(HttpServletRequest req,HttpServletResponse res) throws IOException{
         processRequest(req, res);
     }
 
