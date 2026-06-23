@@ -16,20 +16,21 @@ import main.java.exception.UrlNotFoundException;
 import main.java.itu.annotation.Controller;
 import main.java.itu.annotation.UrlMapping;
 import main.java.utils.Loader;
+import main.java.utils.MethodeControllerMapping;
 
 public class FrontControllerServlet extends HttpServlet { 
     private List<Class<?>> listController;
     private String controllerPackage;
-    private HashMap<String,Method> mappingUrlMethod;
+    private HashMap<String,MethodeControllerMapping> mappingUrl;
 
     public void init(){
         controllerPackage = this.getInitParameter("controllerPackage");
-        listController = Loader.getAnnotatedClasses(controllerPackage,Controller.class,ElementType.TYPE);
-        mappingUrlMethod = Loader.getMethodByAnnotation(UrlMapping.class, listController);
+        listController = Loader.getAnnotatedClasses(controllerPackage,Controller.class);
+        mappingUrl = Loader.getMethodByAnnotation(UrlMapping.class, listController);
     }
 
-    public Method processPath(String path){
-        return mappingUrlMethod.get(path);
+    public MethodeControllerMapping processPath(String path){
+        return mappingUrl.get(path);
     }
 
     public void processRequest(HttpServletRequest req , HttpServletResponse res) throws IOException ,UrlNotFoundException{
@@ -37,18 +38,20 @@ public class FrontControllerServlet extends HttpServlet {
         res.setContentType("text/plain");
         PrintWriter out = res.getWriter();
         try {
-            Method m = processPath(path);
-            if(m == null){
-                throw new UrlNotFoundException(path, mappingUrlMethod);
+            MethodeControllerMapping method = processPath(path);
+            if(method == null){
+                throw new UrlNotFoundException(path);
             }
             else{
+                Method m = method.getM();
+                out.println("URL : " + path);
                 out.println("METHODE : "+ m.getName() + " / CONTROLLER : "+ m.getDeclaringClass());
             }
         } catch (UrlNotFoundException e) {
-            out.println("L'url " + e.getUrl() + " n'est pas mappee à une méthode.");
+            out.println("L'url " + e.getUrl() + " n'est pas mappee a une methode.");
             out.println("Les urls dispo sont : ");
-            for (Map.Entry<String, Method> entry : e.getMap().entrySet()) {
-                out.println("- " + entry.getKey() + " : " + entry.getValue().getDeclaringClass().getName());
+            for (Map.Entry<String, MethodeControllerMapping> entry : mappingUrl.entrySet()) {
+                out.println("- " + entry.getKey() + " : " + entry.getValue().getClasse());
             }
         } 
     }
