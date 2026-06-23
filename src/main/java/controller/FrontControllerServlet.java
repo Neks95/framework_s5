@@ -42,7 +42,7 @@ public class FrontControllerServlet extends HttpServlet {
                 throw new UrlNotFoundException(path, mappingUrlMethod);
             }
             else{
-                out.print("URL : " + path);
+                out.println("URL : " + path);
                 out.println("METHODE : "+ m.getName() + " / CONTROLLER : "+ m.getDeclaringClass());
             }
         } catch (UrlNotFoundException e) {
