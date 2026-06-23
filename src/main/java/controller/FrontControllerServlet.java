@@ -42,10 +42,11 @@ public class FrontControllerServlet extends HttpServlet {
                 throw new UrlNotFoundException(path, mappingUrlMethod);
             }
             else{
+                out.print("URL : " + path);
                 out.println("METHODE : "+ m.getName() + " / CONTROLLER : "+ m.getDeclaringClass());
             }
         } catch (UrlNotFoundException e) {
-            out.println("L'url " + e.getUrl() + " n'est pas mappee à une méthode.");
+            out.println("L'url " + e.getUrl() + " n'est pas mappee a une methode.");
             out.println("Les urls dispo sont : ");
             for (Map.Entry<String, Method> entry : e.getMap().entrySet()) {
                 out.println("- " + entry.getKey() + " : " + entry.getValue().getDeclaringClass().getName());
