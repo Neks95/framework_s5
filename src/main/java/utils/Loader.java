@@ -14,7 +14,7 @@ import main.java.itu.annotation.UrlMapping;
 
 public class Loader {
 
-    public static List<Class<?>> getAnnotatedClasses(String packageName,Class<? extends Annotation> annotation , ElementType niveauElementType){
+    public static List<Class<?>> getAnnotatedClasses(String packageName,Class<? extends Annotation> annotation){
         List<Class<?>> listes = new ArrayList<>();
         List<Class<?>> classes = Loader.getClassesInPackage(packageName);
         for(Class<?> classe : classes){
@@ -25,18 +25,20 @@ public class Loader {
         return listes;
     }
 
-    public static HashMap<String,Method> getMethodByAnnotation(Class<UrlMapping> mapping,List<Class<?>> controllers){
-        HashMap<String,Method> urlMethod = new HashMap<>();
+    public static HashMap<String,MethodeControllerMapping> getMethodByAnnotation(Class<UrlMapping> mapping,List<Class<?>> controllers){
+        HashMap<String,MethodeControllerMapping> urlMethod = new HashMap<>();
         for(Class<?> controller : controllers){
             Method[] methods = controller.getDeclaredMethods();
             for(Method m : methods){
                 if(m.isAnnotationPresent(mapping)){
                     String url = m.getAnnotation(mapping).url();
-                    urlMethod.put(url,m);
+                    MethodeControllerMapping methodeControllerMapping = new MethodeControllerMapping(m,controller);
+                    urlMethod.put(url,methodeControllerMapping);
                 }
             }
         }
         return urlMethod;
+        
     }
 
     public static List<Class<?>> getClassesInPackage (String packageName) {
