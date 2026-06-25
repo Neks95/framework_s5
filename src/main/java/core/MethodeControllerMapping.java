@@ -10,10 +10,10 @@ public class MethodeControllerMapping {
         this.methode  = m;
         this.classe = classe;
     }
-    public Method getM() {
+    public Method getMethod() {
         return methode;
     }
-    public void setM(Method m) {
+    public void setMethod(Method m) {
         this.methode = m;
     }
     public Class<?> getClasse() {

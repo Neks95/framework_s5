@@ -51,7 +51,7 @@ public class FrontControllerServlet extends HttpServlet {
                 throw new UrlNotFoundException(path);
             }
             else{
-                Method m = method.getM();
+                Method m = method.getMethod();
                 out.println("URL : " + path);
                 out.println("METHODE : "+ m.getName() + " / CONTROLLER : "+ m.getDeclaringClass());
                 Executor.invokeFunction(m);
@@ -61,7 +61,7 @@ public class FrontControllerServlet extends HttpServlet {
             out.println("Les urls dispo sont : ");
             for (Map.Entry<UrlMethodeHttpMapping, MethodeControllerMapping> entry : mappingUrl.entrySet()) {
                 out.println("- " + entry.getKey().getUrl() + "("+entry.getKey().getMethode() + ") : " + entry.getValue().getClasse());
-            }
+           }
         } 
     }
 
