@@ -18,6 +18,7 @@ import main.java.core.UrlMethodeHttpMapping;
 import main.java.exception.UrlNotFoundException;
 import main.java.itu.annotation.Controller;
 import main.java.itu.annotation.UrlMapping;
+import main.java.utils.Executor;
 import main.java.utils.Loader;
 
 public class FrontControllerServlet extends HttpServlet { 
@@ -53,6 +54,7 @@ public class FrontControllerServlet extends HttpServlet {
                 Method m = method.getM();
                 out.println("URL : " + path);
                 out.println("METHODE : "+ m.getName() + " / CONTROLLER : "+ m.getDeclaringClass());
+                Executor.invokeFunction(m);
             }
         } catch (UrlNotFoundException e) {
             out.println("L'url " + e.getUrl() + " n'est pas mappee a une methode.");
