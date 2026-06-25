@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface UrlMapping {
     String url();
+    String methodeHttp() default "GET";
 }

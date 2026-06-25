@@ -12,25 +12,32 @@ import java.util.Map;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import main.java.core.MethodeControllerMapping;
+import main.java.core.MethodeHttp;
+import main.java.core.UrlMethodeHttpMapping;
 import main.java.exception.UrlNotFoundException;
 import main.java.itu.annotation.Controller;
 import main.java.itu.annotation.UrlMapping;
 import main.java.utils.Loader;
-import main.java.utils.MethodeControllerMapping;
 
 public class FrontControllerServlet extends HttpServlet { 
     private List<Class<?>> listController;
     private String controllerPackage;
-    private HashMap<String,MethodeControllerMapping> mappingUrl;
+    private HashMap<UrlMethodeHttpMapping,MethodeControllerMapping> mappingUrl;
 
-    public void init(){
+    public void init() {
         controllerPackage = this.getInitParameter("controllerPackage");
-        listController = Loader.getAnnotatedClasses(controllerPackage,Controller.class);
-        mappingUrl = Loader.getMethodByAnnotation(UrlMapping.class, listController);
+        System.out.println("Package = " + controllerPackage);
+
+        listController = Loader.getAnnotatedClasses(controllerPackage, Controller.class);
+        System.out.println("Nb controllers = " + listController.size());
+
+        mappingUrl = Loader.getUrlMappingByAnnotation(UrlMapping.class, listController);
+        System.out.println("Nb mappings = " + mappingUrl.size());
     }
 
     public MethodeControllerMapping processPath(String path){
-        return mappingUrl.get(path);
+        return mappingUrl.get(new UrlMethodeHttpMapping(path, MethodeHttp.valueOf("GET")));
     }
 
     public void processRequest(HttpServletRequest req , HttpServletResponse res) throws IOException ,UrlNotFoundException{
@@ -50,8 +57,8 @@ public class FrontControllerServlet extends HttpServlet {
         } catch (UrlNotFoundException e) {
             out.println("L'url " + e.getUrl() + " n'est pas mappee a une methode.");
             out.println("Les urls dispo sont : ");
-            for (Map.Entry<String, MethodeControllerMapping> entry : mappingUrl.entrySet()) {
-                out.println("- " + entry.getKey() + " : " + entry.getValue().getClasse());
+            for (Map.Entry<UrlMethodeHttpMapping, MethodeControllerMapping> entry : mappingUrl.entrySet()) {
+                out.println("- " + entry.getKey().getUrl() + "("+entry.getKey().getMethode() + ") : " + entry.getValue().getClasse());
             }
         } 
     }
