@@ -10,8 +10,7 @@ public class Executor {
             Constructor<?> cons = proprio.getDeclaredConstructor();
             m.invoke(cons.newInstance());
          } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("La methode "+ m.getName() + "n'existe pas !");
+            throw new RuntimeException(e);
          }
 
     }

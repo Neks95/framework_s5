@@ -22,24 +22,22 @@ import main.java.utils.Executor;
 import main.java.utils.Loader;
 
 public class FrontControllerServlet extends HttpServlet { 
-    private List<Class<?>> listController;
-    private String controllerPackage;
-    private HashMap<UrlMethodeHttpMapping,MethodeControllerMapping> mappingUrl;
+    private HashMap<UrlMethodeHttpMapping,MethodeControllerMapping> mappingUrl = new HashMap<>();
 
     public void init() {
-        controllerPackage = this.getInitParameter("controllerPackage");
-        System.out.println("Package = " + controllerPackage);
-
-        listController = Loader.getAnnotatedClasses(controllerPackage, Controller.class);
-        System.out.println("Nb controllers = " + listController.size());
-
-        mappingUrl = Loader.getUrlMappingByAnnotation(UrlMapping.class, listController);
+        // controllerPackage = this.getInitParameter("controllerPackage");
+        // System.out.println("Package = " + controllerPackage);
+        // Loader.getUrlMappingByAnnotation(UrlMapping.class,mappingUrl,controllerPackage,Controller.class);
+        // System.out.println("Nb mappings = " + mappingUrl.size());
+        mappingUrl = (HashMap<UrlMethodeHttpMapping,MethodeControllerMapping>)this.getServletContext().getAttribute("mappingUrl");
         System.out.println("Nb mappings = " + mappingUrl.size());
+
     }
 
     public MethodeControllerMapping processPath(String path){
         return mappingUrl.get(new UrlMethodeHttpMapping(path, MethodeHttp.valueOf("GET")));
     }
+
 
     public void processRequest(HttpServletRequest req , HttpServletResponse res) throws IOException ,UrlNotFoundException{
         String path = req.getRequestURI().substring(req.getContextPath().length());

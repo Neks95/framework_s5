@@ -25,9 +25,6 @@ public class UrlMethodeHttpMapping {
     
     @Override
     public boolean equals(Object obj){
-        if(obj == this){
-            return true;
-        }
         if(!(obj instanceof UrlMethodeHttpMapping)){
             return false;
         }
