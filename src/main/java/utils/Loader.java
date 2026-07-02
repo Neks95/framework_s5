@@ -20,20 +20,15 @@ import main.java.itu.annotation.UrlMapping;
 
 public class Loader {
 
-    public static List<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> annotation) {
+    public static void getUrlMappingByAnnotation(Class<UrlMapping> annotation,HashMap<UrlMethodeHttpMapping,MethodeControllerMapping> urlMapping , String packageName , Class<? extends Annotation> annotationController) {
         List<Class<?>> listes = new ArrayList<>();
         List<Class<?>> classes = Loader.getClassesInPackage(packageName);
         for (Class<?> classe : classes) {
-          if (classe.isAnnotationPresent(annotation)) {
+          if (classe.isAnnotationPresent(annotationController)) {
             listes.add(classe);
             }
         }
-        return listes;
-    }
-
-    public static HashMap<UrlMethodeHttpMapping, MethodeControllerMapping> getUrlMappingByAnnotation(Class<UrlMapping> annotation, List<Class<?>> controllers) {
-        HashMap<UrlMethodeHttpMapping, MethodeControllerMapping> mappingUrlAndMethode = new HashMap<>();
-        for (Class<?> controller : controllers) {
+        for (Class<?> controller : listes) {
             Method[] methods = controller.getDeclaredMethods();
             for (Method method : methods) {
                 if (method.isAnnotationPresent(annotation)) {
@@ -42,14 +37,14 @@ public class Loader {
                     MethodeHttp type = MethodeHttp.valueOf(urlAnnotation.methodeHttp().toUpperCase());
                     UrlMethodeHttpMapping currUrlMethodeMapping = new UrlMethodeHttpMapping(url, type);
                     MethodeControllerMapping methodeControllerMapping = new MethodeControllerMapping(method, controller);
-                    if (mappingUrlAndMethode.containsKey(currUrlMethodeMapping)) {
+                    //miantso an'le equals apres hashage
+                    if (urlMapping.containsKey(currUrlMethodeMapping)) {
                         throw new DuplicateUrlAndMethodException(currUrlMethodeMapping);
                     }
-                    mappingUrlAndMethode.put(currUrlMethodeMapping, methodeControllerMapping);
+                    urlMapping.put(currUrlMethodeMapping, methodeControllerMapping);
                 }
             }
         }
-        return mappingUrlAndMethode;
     }
 
     public static List<Class<?>> getClassesInPackage(String packageName) {
