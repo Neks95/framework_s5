@@ -30,6 +30,7 @@ public class Executor {
                     req.setAttribute(entry.getKey(), entry.getValue());
                 }
             }
+            
             String nomPage = GlobalViewParameter.prefix
                     + mv.getNomPage()
                     + GlobalViewParameter.suffixe;
