@@ -2,11 +2,8 @@ package main.java.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.annotation.ElementType;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpServlet;
@@ -16,10 +13,7 @@ import main.java.core.MethodeControllerMapping;
 import main.java.core.MethodeHttp;
 import main.java.core.UrlMethodeHttpMapping;
 import main.java.exception.UrlNotFoundException;
-import main.java.itu.annotation.Controller;
-import main.java.itu.annotation.UrlMapping;
 import main.java.utils.Executor;
-import main.java.utils.Loader;
 
 public class FrontControllerServlet extends HttpServlet { 
     private HashMap<UrlMethodeHttpMapping,MethodeControllerMapping> mappingUrl = new HashMap<>();
@@ -48,11 +42,12 @@ public class FrontControllerServlet extends HttpServlet {
             if(method == null){
                 throw new UrlNotFoundException(path);
             }
+            
             else{
                 Method m = method.getMethod();
                 out.println("URL : " + path);
                 out.println("METHODE : "+ m.getName() + " / CONTROLLER : "+ m.getDeclaringClass());
-                Executor.invokeFunction(m);
+                Executor.invokeViewRelatedFunction(method,req,res);
             }
         } catch (UrlNotFoundException e) {
             out.println("L'url " + e.getUrl() + " n'est pas mappee a une methode.");
