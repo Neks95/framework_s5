@@ -15,7 +15,6 @@ import main.java.view.GlobalViewParameter;
 
 public class Executor {
     public static void invokeViewRelatedFunction(MethodeControllerMapping m,HttpServletRequest req,HttpServletResponse res) {
-
     try {
        Object controller = m.getClasse()
        .getDeclaredConstructor()
@@ -24,30 +23,15 @@ public class Executor {
 
        Object retour = method.invoke(controller);
         if (retour instanceof ModelAndView mv) {
-            HashMap<String, Object> data = mv.getAttribute();
-            if (data != null) {
-                for (Map.Entry<String, Object> entry : data.entrySet()) {
-                    req.setAttribute(entry.getKey(), entry.getValue());
-                }
-            }
-            
-            String nomPage = GlobalViewParameter.prefix
-                    + mv.getNomPage()
-                    + GlobalViewParameter.suffixe;
-            System.out.println(nomPage);
-            try {
-                RequestDispatcher dispatcher = req.getRequestDispatcher(nomPage); 
-                dispatcher.forward(req, res);
-            } catch (ServletException s) {
-                System.out.println(s.getMessage());
-                throw s;
-            }
+            ModelAndViewHandler.processModelAndView(mv,req,res);
         }
 
     } catch (Exception e) {
         throw new RuntimeException(e);
     }
 }
+
+    
 
 
 }
