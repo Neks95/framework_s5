@@ -1,6 +1,12 @@
 {
     "java.project.referencedLibraries": [
         "lib/ojdbc11.jar",
-        "lib/servlet-api.jar"
+        "lib/servlet-api.jar",
+        "lib/spring-core-7.0.0-M8.jar",
+        "lib/spring-beans-7.0.0-M8.jar",
+        "lib/spring-context-7.0.0-M8.jar",
+        "lib/spring-expression-7.0.0-M8.jar",
+        "lib/commons-logging-1.2.jar",
+        "lib/spring-aop-5.3.18.jar"
     ]
 }
