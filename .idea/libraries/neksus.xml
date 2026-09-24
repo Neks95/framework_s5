@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="neksus">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/neksus.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
