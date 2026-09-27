@@ -10,7 +10,7 @@ public class InvalideJsonString extends RuntimeException{
 
 
     public InvalideJsonString(String json){
-        super("L'json "+ json + "n'est pas valide");
+        super("Le json :  '"+ json + "  ' n'est pas valide");
         this.json = json;
     }
     public String getUrl(){
