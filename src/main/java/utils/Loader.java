@@ -16,6 +16,7 @@ import main.java.core.MethodeControllerMapping;
 import main.java.core.MethodeHttp;
 import main.java.core.UrlMethodeHttpMapping;
 import main.java.exception.DuplicateUrlAndMethodException;
+import main.java.itu.annotation.ApiRest;
 import main.java.itu.annotation.UrlMapping;
 
 public class Loader {
@@ -37,6 +38,9 @@ public class Loader {
                     MethodeHttp type = MethodeHttp.valueOf(urlAnnotation.methodeHttp().toUpperCase());
                     UrlMethodeHttpMapping currUrlMethodeMapping = new UrlMethodeHttpMapping(url, type);
                     MethodeControllerMapping methodeControllerMapping = new MethodeControllerMapping(method, controller);
+                    if(method.isAnnotationPresent(ApiRest.class)){
+                        methodeControllerMapping.setApiRest(true);
+                    }
                     //miantso an'le equals apres hashage
                     if (urlMapping.containsKey(currUrlMethodeMapping)) {
                         throw new DuplicateUrlAndMethodException(currUrlMethodeMapping);

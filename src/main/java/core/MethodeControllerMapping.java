@@ -5,10 +5,12 @@ import java.lang.reflect.Method;
 public class MethodeControllerMapping {
     private Method methode;
     private Class<?> classe;
+    private boolean isApiRest;
 
     public MethodeControllerMapping(Method m, Class<?> classe) {
         this.methode  = m;
         this.classe = classe;
+        isApiRest = false;
     }
     public Method getMethod() {
         return methode;
@@ -23,6 +25,12 @@ public class MethodeControllerMapping {
         this.classe = classe;
     }
 
+   public boolean isApiRest() {
+    return isApiRest;
+   }
+   public void setApiRest(boolean isApiRest) {
+    this.isApiRest = isApiRest;
+   }
     
 
     
