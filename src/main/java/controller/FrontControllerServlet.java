@@ -47,13 +47,13 @@ public class FrontControllerServlet extends HttpServlet {
             }
             if (method != null && method.isApiRest()) {
                 Executor.invokeApiRelatedFuntion(method, req, res);
-                return;
+                return; 
             }
             else {
                 Method m = method.getMethod();
                 out.println("URL : " + path);
                 out.println("METHODE : " + m.getName() + " / CONTROLLER : " + m.getDeclaringClass());
-                out.println(method.isApiRest());
+                out.println(method.isApiRest()); 
                 Executor.invokeViewRelatedFunction(method, req, res);
 
             }
