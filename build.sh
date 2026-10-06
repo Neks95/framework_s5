@@ -35,9 +35,9 @@ fi
 # 4. Compiler les classes
 echo "🔨 Compilation des fichiers sources..."
 if [ -n "$CLASSPATH" ]; then
-    javac -d $OUT_DIR -cp "$CLASSPATH" $SOURCES
+    javac -parameters -d $OUT_DIR -cp "$CLASSPATH" $SOURCES
 else
-    javac -d $OUT_DIR $SOURCES
+    javac -parameters -d $OUT_DIR $SOURCES
 fi
 
 if [ $? -ne 0 ]; then

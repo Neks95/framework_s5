@@ -25,7 +25,6 @@ public class Executor {
                     .getDeclaredConstructor()
                     .newInstance();
             Method method = m.getMethod();
-
             // ApplicationContext applicationContext = (ApplicationContext) req.getServletContext()
             //         .getAttribute("springContext");
 
@@ -35,18 +34,17 @@ public class Executor {
             for(int i = 0 ; i<parameters.length;i++){
                 Parameter parameter = parameters[i];
                 String paramName = parameter.getName();
+                System.out.println(paramName);
                 Class<?> paramType = parameter.getType();
                 String value = req.getParameter(paramName);
-
+                System.out.println(value);
                 if(paramType == String.class){
                     args[i] = value;
                 }
-
-                if(paramType == Integer.class){
+                if(paramType == int.class){
                     args[i] = Integer.parseInt(value);
                 }
-
-                if(paramType == Double.class){
+                if(paramType == double.class){
                     args[i] = Double.parseDouble(value);
                 }
             }
