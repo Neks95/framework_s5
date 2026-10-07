@@ -25,27 +25,43 @@ public class Executor {
                     .getDeclaredConstructor()
                     .newInstance();
             Method method = m.getMethod();
-
-            ApplicationContext applicationContext = (ApplicationContext) req.getServletContext()
-                    .getAttribute("springContext");
+            // ApplicationContext applicationContext = (ApplicationContext) req.getServletContext()
+            //         .getAttribute("springContext");
 
             Parameter[] parameters = method.getParameters();
             Object[] args = new Object[parameters.length];
 
-            for (int i = 0; i < parameters.length; i++) {
-                Class<?> type = parameters[i].getType();
-                if (ApplicationContext.class.isAssignableFrom(type)) {
-                    args[i] = applicationContext;
-                } else {
-                    args[i] = null;
+            for(int i = 0 ; i<parameters.length;i++){
+                Parameter parameter = parameters[i];
+                String paramName = parameter.getName();
+                System.out.println(paramName);
+                Class<?> paramType = parameter.getType();
+                String value = req.getParameter(paramName);
+                System.out.println(value);
+                if(paramType == String.class){
+                    args[i] = value;
+                }
+                if(paramType == int.class){
+                    args[i] = Integer.parseInt(value);
+                }
+                if(paramType == double.class){
+                    args[i] = Double.parseDouble(value);
                 }
             }
 
-            Object retour = method.invoke(controller);
+            // for (int i = 0; i < parameters.length; i++) {
+            //     Class<?> type = parameters[i].getType();
+            //     if (ApplicationContext.class.isAssignableFrom(type)) {
+            //         args[i] = applicationContext;
+            //     } else {
+            //         args[i] = null;
+            //     }
+            // }
+            Object retour = method.invoke(controller,args);
             if (retour instanceof ModelAndView mv) {
                 ModelAndViewHandler.processModelAndView(mv, req, res);
             }
-
+        
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

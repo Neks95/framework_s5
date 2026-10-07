@@ -37,7 +37,7 @@ public class FrontControllerServlet extends HttpServlet {
     public void processRequest(HttpServletRequest req, HttpServletResponse res)
             throws IOException, UrlNotFoundException {
         String path = req.getRequestURI().substring(req.getContextPath().length());
-        res.setContentType("text/plain");
+        // res.setContentType("text/plain");
         PrintWriter out = res.getWriter();
 
         try {
@@ -47,15 +47,14 @@ public class FrontControllerServlet extends HttpServlet {
             }
             if (method != null && method.isApiRest()) {
                 Executor.invokeApiRelatedFuntion(method, req, res);
-                return;
+                return; 
             }
             else {
                 Method m = method.getMethod();
-                out.println("URL : " + path);
-                out.println("METHODE : " + m.getName() + " / CONTROLLER : " + m.getDeclaringClass());
-                out.println(method.isApiRest());
+                // out.println("URL : " + path);
+                // out.println("METHODE : " + m.getName() + " / CONTROLLER : " + m.getDeclaringClass());
+                // out.println(method.isApiRest()); 
                 Executor.invokeViewRelatedFunction(method, req, res);
-
             }
         } catch (UrlNotFoundException e) {
             out.println("L'url " + e.getUrl() + " n'est pas mappee a une methode.");
