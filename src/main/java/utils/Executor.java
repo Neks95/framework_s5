@@ -38,6 +38,9 @@ public class Executor {
                 Class<?> paramType = parameter.getType();
                 String value = req.getParameter(paramName);
                 System.out.println(value);
+                if(value == null){
+                    throw new RuntimeException("Un champ est vide !!");
+                }
                 if(paramType == String.class){
                     args[i] = value;
                 }
