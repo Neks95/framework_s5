@@ -59,12 +59,12 @@ public class Executor {
             if (value == null)
                 continue; 
             f.setAccessible(true);
-            f.set(obj, convert(value, f.getType()));
+            f.set(obj, convertPrimitif(value, f.getType()));
         }
         return obj;
     }
 
-    private static Object convert(String value, Class<?> type) {
+    private static Object convertPrimitif(String value, Class<?> type) {
         if (type == String.class)
             return value;
         if (type == int.class || type == Integer.class)
