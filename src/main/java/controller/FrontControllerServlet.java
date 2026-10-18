@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +17,8 @@ import main.java.exception.UrlNotFoundException;
 import main.java.itu.annotation.ApiRest;
 import main.java.utils.Executor;
 
+
+@MultipartConfig
 public class FrontControllerServlet extends HttpServlet {
     private HashMap<UrlMethodeHttpMapping, MethodeControllerMapping> mappingUrl = new HashMap<>();
 
