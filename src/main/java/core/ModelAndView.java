@@ -9,6 +9,10 @@ public class ModelAndView {
         this.attribute = attribute;
         this.nomPage = nomPage;
     }
+    public ModelAndView(String nomPage){
+        this.attribute = null;
+        this.nomPage = nomPage;
+    }
     public ModelAndView(){
         this.attribute = new HashMap<>();
     }

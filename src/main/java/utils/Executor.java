@@ -1,8 +1,8 @@
 package main.java.utils;
 
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
-import java.lang.reflect.Method;
 import java.lang.reflect.*;
 
 import javax.management.RuntimeErrorException;
@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import main.java.core.MapFile;
 import main.java.core.MethodeControllerMapping;
 import main.java.core.ModelAndView;
 import main.java.exception.InvalideJsonString;
@@ -39,7 +41,7 @@ public class Executor {
                     if (value == null) {
                         throw new RuntimeException("Paramètre manquant : " + parameter.getName());
                     }
-                    args[i] = convert(value, paramType);
+                    args[i] = convertPrimitif(value, paramType);
                 }
             }
 
@@ -55,13 +57,36 @@ public class Executor {
     private static Object bindObject(Class<?> type, HttpServletRequest req) throws Exception {
         Object obj = type.getDeclaredConstructor().newInstance();
         for (Field f : type.getDeclaredFields()) {
+            f.setAccessible(true);
+
+            if (f.getType() == MapFile.class) {
+                Part part = req.getPart(f.getName());
+                if (part == null || part.getSize() == 0)
+                    continue;
+                f.set(obj, toMapFile(part));
+                continue;
+            }
+
             String value = req.getParameter(f.getName());
             if (value == null)
-                continue; 
-            f.setAccessible(true);
+                continue;
             f.set(obj, convertPrimitif(value, f.getType()));
         }
         return obj;
+    }
+
+    private static MapFile toMapFile(Part part) throws Exception {
+        String submitted = part.getSubmittedFileName();
+        String nom = submitted;
+        String ext = "";
+        int dot = submitted.lastIndexOf('.');
+        if (dot > 0) {
+            nom = submitted.substring(0, dot);
+            ext = submitted.substring(dot + 1);
+        }
+        try (InputStream in = part.getInputStream()) {
+            return new MapFile(nom, ext, in.readAllBytes());
+        }
     }
 
     private static Object convertPrimitif(String value, Class<?> type) {
