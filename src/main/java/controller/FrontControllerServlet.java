@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import main.java.core.MethodeControllerMapping;
 import main.java.core.MethodeHttp;
+import main.java.core.NkSession;
 import main.java.core.UrlMethodeHttpMapping;
 import main.java.exception.UrlNotFoundException;
 import main.java.itu.annotation.ApiRest;
@@ -36,6 +37,11 @@ public class FrontControllerServlet extends HttpServlet {
     public MethodeControllerMapping processPath(String path) {
         return mappingUrl.get(new UrlMethodeHttpMapping(path, MethodeHttp.valueOf("GET")));
     }
+
+
+    
+
+
 
     public void processRequest(HttpServletRequest req, HttpServletResponse res)
             throws IOException, UrlNotFoundException {
