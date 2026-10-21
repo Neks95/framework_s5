@@ -12,8 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpSession;
 import main.java.core.MethodeControllerMapping;
 import main.java.core.MethodeHttp;
+import main.java.core.NkSession;
 import main.java.core.UrlMethodeHttpMapping;
 import main.java.exception.DuplicateUrlAndMethodException;
 import main.java.itu.annotation.ApiRest;
@@ -90,4 +92,6 @@ public class Loader {
         }
         return classes;
     }
+
+
 }
