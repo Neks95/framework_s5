@@ -22,14 +22,6 @@ import main.java.itu.annotation.ModelAttribute;
 
 public class Executor {
 
-    public static void fillNkSessionFromSession(HttpServletRequest req , NkSession session){
-        HttpSession currSession = req.getSession();
-        Enumeration<String> nom = currSession.getAttributeNames();
-        while (nom.hasMoreElements()) {
-            String attributeName = nom.nextElement();
-            session.addAttribute(attributeName,currSession.getAttribute(attributeName));
-        }
-    }
 
     public static void invokeViewRelatedFunction(MethodeControllerMapping m, HttpServletRequest req,
             HttpServletResponse res) {
@@ -39,7 +31,6 @@ public class Executor {
             ServletContext ctx = req.getServletContext();
             Parameter[] parameters = method.getParameters();
             Object[] args = new Object[parameters.length];
-            Boolean isSessionUsed = false;
             NkSession session = (NkSession)ctx.getAttribute("session");
 
 
@@ -50,11 +41,9 @@ public class Executor {
                 if (parameter.isAnnotationPresent(ModelAttribute.class)) {
                     args[i] = bindObject(paramType, req);
                 } 
-                else if(paramType == NkSession.class){
-                    isSessionUsed = true;
+                else if(paramType == NkSession.class) {
                     if(session == null){
                         session= new NkSession();
-                        Executor.fillNkSessionFromSession(req,session);
                         ctx.setAttribute("session", session);
                     }
                     args[i] = session; 
@@ -69,10 +58,6 @@ public class Executor {
             }
 
             Object retour = method.invoke(controller, args);
-
-            if(isSessionUsed){
-                Executor.fillNkSessionFromSession(req, (NkSession)req.getServletContext().getAttribute("session"));
-            }
 
             if (retour instanceof ModelAndView mv) {
                 ModelAndViewHandler.processModelAndView(mv, req, res);
@@ -101,19 +86,19 @@ public class Executor {
     return obj;
 }
 
-private static MapFile toMapFile(Part part) throws Exception {
-    String submitted = part.getSubmittedFileName();
-    String nom = submitted;
-    String ext = "";
-    int dot = submitted.lastIndexOf('.');
-    if (dot > 0) {
-        nom = submitted.substring(0, dot);
-        ext = submitted.substring(dot + 1);
+    private static MapFile toMapFile(Part part) throws Exception {
+        String submitted = part.getSubmittedFileName();
+        String nom = submitted;
+        String ext = "";
+        int dot = submitted.lastIndexOf('.');
+        if (dot > 0) {
+            nom = submitted.substring(0, dot);
+            ext = submitted.substring(dot + 1);
+        }
+        try (InputStream in = part.getInputStream()) {
+            return new MapFile(nom, ext, in.readAllBytes());
+        }
     }
-    try (InputStream in = part.getInputStream()) {
-        return new MapFile(nom, ext, in.readAllBytes());
-    }
-}
 
     
 
@@ -158,5 +143,4 @@ private static MapFile toMapFile(Part part) throws Exception {
             throw new RuntimeException(e);
         }
     }
-
 }
