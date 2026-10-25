@@ -12,10 +12,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import main.java.core.MethodeControllerMapping;
 import main.java.core.MethodeHttp;
-import main.java.core.NkSession;
 import main.java.core.UrlMethodeHttpMapping;
+import main.java.exception.UnauthorizedException;
 import main.java.exception.UrlNotFoundException;
-import main.java.itu.annotation.ApiRest;
 import main.java.utils.Executor;
 
 
@@ -24,10 +23,6 @@ public class FrontControllerServlet extends HttpServlet {
     private HashMap<UrlMethodeHttpMapping, MethodeControllerMapping> mappingUrl = new HashMap<>();
 
     public void init() {
-        // controllerPackage = this.getInitParameter("controllerPackage");
-        // System.out.println("Package = " + controllerPackage);
-        // Loader.getUrlMappingByAnnotation(UrlMapping.class,mappingUrl,controllerPackage,Controller.class);
-        // System.out.println("Nb mappings = " + mappingUrl.size());
         mappingUrl = (HashMap<UrlMethodeHttpMapping, MethodeControllerMapping>) this.getServletContext()
                 .getAttribute("mappingUrl");
         System.out.println("Nb mappings = " + mappingUrl.size());
@@ -47,7 +42,6 @@ public class FrontControllerServlet extends HttpServlet {
             throws IOException, UrlNotFoundException {
         String path = req.getRequestURI().substring(req.getContextPath().length());
         // res.setContentType("text/plain");
-        PrintWriter out = res.getWriter();
 
         try {
             MethodeControllerMapping method = processPath(path);
@@ -66,12 +60,17 @@ public class FrontControllerServlet extends HttpServlet {
                 Executor.invokeViewRelatedFunction(method, req, res);
             }
         } catch (UrlNotFoundException e) {
+                    PrintWriter out = res.getWriter();
+
             out.println("L'url " + e.getUrl() + " n'est pas mappee a une methode.");
             out.println("Les urls dispo sont : ");
             for (Map.Entry<UrlMethodeHttpMapping, MethodeControllerMapping> entry : mappingUrl.entrySet()) {
                 out.println("- " + entry.getKey().getUrl() + "(" + entry.getKey().getMethode() + ") : "
                         + entry.getValue().getClasse());
             }
+        } catch(UnauthorizedException e){
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED , e.getMessage());
+
         }
     }
 
