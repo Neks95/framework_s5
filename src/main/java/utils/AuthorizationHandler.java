@@ -2,7 +2,10 @@ package main.java.utils;
 
 import main.java.itu.annotation.HasRole;
 import java.lang.reflect.Method;
+
+
 import main.java.core.NkSession;
+import main.java.exception.NotAuthenticatedException;
 import main.java.exception.NotAuthorizedException;
 
 public class AuthorizationHandler {
@@ -12,8 +15,8 @@ public class AuthorizationHandler {
 
     }
 
-    public static void checkPermission(Method m, NkSession session) throws NotAuthorizedException {
-        AuthentificationHandler.checkAuth(m,session);
+    public static void checkPermission(Method m, NkSession session) throws NotAuthorizedException,NotAuthenticatedException {
+        AuthentificationHandler.checkAuth(m,session);  
         HasRole annotation = m.getAnnotation(HasRole.class);
         if (annotation == null) {
             return;
@@ -30,7 +33,6 @@ public class AuthorizationHandler {
             }
         }
         throw new NotAuthorizedException();
-
     }
 
     public static void setPERMISSION_NAME(String pERMISSION_NAME) {
