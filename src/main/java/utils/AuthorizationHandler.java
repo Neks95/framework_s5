@@ -13,6 +13,7 @@ public class AuthorizationHandler {
     }
 
     public static void checkPermission(Method m, NkSession session) throws NotAuthorizedException {
+        AuthentificationHandler.checkAuth(m,session);
         HasRole annotation = m.getAnnotation(HasRole.class);
         if (annotation == null) {
             return;

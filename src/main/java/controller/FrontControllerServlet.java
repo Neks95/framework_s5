@@ -2,7 +2,6 @@ package main.java.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,10 +53,6 @@ public class FrontControllerServlet extends HttpServlet {
                 return; 
             }
             else {
-                Method m = method.getMethod();
-                // out.println("URL : " + path);
-                // out.println("METHODE : " + m.getName() + " / CONTROLLER : " + m.getDeclaringClass());
-                // out.println(method.isApiRest()); 
                 Executor.invokeViewRelatedFunction(method, req, res);
             }
         } catch (UrlNotFoundException e) {
