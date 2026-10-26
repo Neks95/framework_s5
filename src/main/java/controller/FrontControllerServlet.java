@@ -13,7 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import main.java.core.MethodeControllerMapping;
 import main.java.core.MethodeHttp;
 import main.java.core.UrlMethodeHttpMapping;
-import main.java.exception.UnauthorizedException;
+import main.java.exception.NotAuthenticatedException;
+import main.java.exception.NotAuthorizedException;
 import main.java.exception.UrlNotFoundException;
 import main.java.utils.Executor;
 
@@ -68,9 +69,11 @@ public class FrontControllerServlet extends HttpServlet {
                 out.println("- " + entry.getKey().getUrl() + "(" + entry.getKey().getMethode() + ") : "
                         + entry.getValue().getClasse());
             }
-        } catch(UnauthorizedException e){
+        } catch(NotAuthenticatedException e){
             res.sendError(HttpServletResponse.SC_UNAUTHORIZED , e.getMessage());
-
+        }
+        catch(NotAuthorizedException e){
+            res.sendError(HttpServletResponse.SC_FORBIDDEN , e.getMessage());
         }
     }
 

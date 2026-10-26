@@ -3,29 +3,24 @@ package main.java.utils;
 import java.lang.reflect.Method;
 
 import main.java.core.NkSession;
-import main.java.exception.UnauthorizedException;
+import main.java.exception.NotAuthenticatedException;
 import main.java.itu.annotation.Secured;
 
-public final class AuthHandler {
-
+public final class AuthentificationHandler {
     public static  String AUTH_ATTR ;
-
-    private AuthHandler() {}
-
+    private AuthentificationHandler() {}
     
-    public static void checkAuth(Method m, NkSession session) throws UnauthorizedException{
+    public static void checkAuth(Method m, NkSession session) throws NotAuthenticatedException{
         if (!m.isAnnotationPresent(Secured.class)) {
             return;
         }
-
         boolean authenticated = session != null
                 && Boolean.TRUE.equals(session.getAttribute(AUTH_ATTR));
 
         if (!authenticated) {
-            throw new UnauthorizedException(false);
+            throw new NotAuthenticatedException();
         }
     }
-
 
     public static void setAUTH_ATTR(String aUTH_ATTR) {
         AUTH_ATTR = aUTH_ATTR;
