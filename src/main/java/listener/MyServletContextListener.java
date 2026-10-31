@@ -14,7 +14,8 @@ import main.java.core.NkSession;
 import main.java.core.UrlMethodeHttpMapping;
 import main.java.exception.ViewParametersNotGivenException;
 import main.java.itu.annotation.UrlMapping;
-import main.java.utils.AuthHandler;
+import main.java.utils.AuthentificationHandler;
+import main.java.utils.AuthorizationHandler;
 import main.java.utils.Loader;
 import main.java.view.GlobalViewParameter;
 import main.java.itu.annotation.Controller;
@@ -43,10 +44,9 @@ public class MyServletContextListener implements ServletContextListener {
             String prefix = servletContext.getInitParameter("prefix");
             String suffix = servletContext.getInitParameter("suffix");
             String sessionConn = servletContext.getInitParameter("connection-session");
-            AuthHandler.setAUTH_ATTR(sessionConn);
-            //init session ????
-            NkSession nk = new NkSession();
-            servletContext.setAttribute("session", nk);
+            AuthentificationHandler.setAUTH_ATTR(sessionConn);
+            String roleSession = servletContext.getInitParameter("role-session");
+            AuthorizationHandler.setPERMISSION_NAME(roleSession);
             if (prefix == null && suffix == null) {
                 throw new ViewParametersNotGivenException();
             } else {

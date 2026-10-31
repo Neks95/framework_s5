@@ -2,7 +2,6 @@ package main.java.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import main.java.core.MethodeControllerMapping;
 import main.java.core.MethodeHttp;
 import main.java.core.UrlMethodeHttpMapping;
-import main.java.exception.UnauthorizedException;
+import main.java.exception.NotAuthenticatedException;
+import main.java.exception.NotAuthorizedException;
 import main.java.exception.UrlNotFoundException;
 import main.java.utils.Executor;
 
@@ -53,10 +53,6 @@ public class FrontControllerServlet extends HttpServlet {
                 return; 
             }
             else {
-                Method m = method.getMethod();
-                // out.println("URL : " + path);
-                // out.println("METHODE : " + m.getName() + " / CONTROLLER : " + m.getDeclaringClass());
-                // out.println(method.isApiRest()); 
                 Executor.invokeViewRelatedFunction(method, req, res);
             }
         } catch (UrlNotFoundException e) {
@@ -68,9 +64,11 @@ public class FrontControllerServlet extends HttpServlet {
                 out.println("- " + entry.getKey().getUrl() + "(" + entry.getKey().getMethode() + ") : "
                         + entry.getValue().getClasse());
             }
-        } catch(UnauthorizedException e){
+        } catch(NotAuthenticatedException e){
             res.sendError(HttpServletResponse.SC_UNAUTHORIZED , e.getMessage());
-
+        }
+        catch(NotAuthorizedException e){
+            res.sendError(HttpServletResponse.SC_FORBIDDEN , e.getMessage());
         }
     }
 
