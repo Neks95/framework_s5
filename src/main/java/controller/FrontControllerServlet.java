@@ -56,8 +56,7 @@ public class FrontControllerServlet extends HttpServlet {
                 Executor.invokeViewRelatedFunction(method, req, res);
             }
         } catch (UrlNotFoundException e) {
-                    PrintWriter out = res.getWriter();
-
+            PrintWriter out = res.getWriter();
             out.println("L'url " + e.getUrl() + " n'est pas mappee a une methode.");
             out.println("Les urls dispo sont : ");
             for (Map.Entry<UrlMethodeHttpMapping, MethodeControllerMapping> entry : mappingUrl.entrySet()) {
@@ -69,7 +68,7 @@ public class FrontControllerServlet extends HttpServlet {
         }
         catch(NotAuthorizedException e){
             res.sendError(HttpServletResponse.SC_FORBIDDEN , e.getMessage());
-        }
+        } 
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
