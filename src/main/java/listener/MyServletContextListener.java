@@ -3,14 +3,15 @@ package main.java.listener;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
+
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import main.java.core.ControllerInstance;
 import main.java.core.MethodeControllerMapping;
-import main.java.core.NkSession;
 import main.java.core.UrlMethodeHttpMapping;
 import main.java.exception.ViewParametersNotGivenException;
 import main.java.itu.annotation.UrlMapping;
@@ -37,6 +38,14 @@ public class MyServletContextListener implements ServletContextListener {
         if (!mappingUrl.isEmpty()) {
             servletContext.setAttribute("mappingUrl", mappingUrl);
             System.out.println(LocalDateTime.now() + " : SCAN DES CONTROLLERS OK");
+            try {
+                for (MethodeControllerMapping m : mappingUrl.values()) {
+                    ControllerInstance.instanceController.put(m.getClasse().getSimpleName(), m.getClasse().getDeclaredConstructor().newInstance());
+                }
+                System.out.println(LocalDateTime.now() + " CREATION DES INSTANCES DES CONTROLLERS OK");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         } else {
             System.out.println(LocalDateTime.now() + " : ERREUR LORS DU SCAN");
         }
@@ -68,7 +77,6 @@ public class MyServletContextListener implements ServletContextListener {
             AnnotationConfigApplicationContext springContext = new AnnotationConfigApplicationContext();
             springContext.scan(basePackages);
             springContext.refresh();
-
             servletContext.setAttribute("springContext", springContext);
             System.out.println(LocalDateTime.now() + " : SPRING CONTEXT DEMARRE avec packages "
                     + String.join(", ", basePackages));

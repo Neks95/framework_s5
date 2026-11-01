@@ -3,10 +3,13 @@ package main.java.utils;
 import java.io.PrintWriter;
 import java.lang.reflect.*;
 
+import org.springframework.context.ApplicationContext;
+
 import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import main.java.core.ControllerInstance;
 import main.java.core.MethodeControllerMapping;
 import main.java.core.ModelAndView;
 import main.java.core.NkSession;
@@ -16,8 +19,6 @@ import main.java.exception.NotAuthorizedException;
 import main.java.itu.annotation.ModelAttribute;
 
 public class Executor {
-
-
     public static void invokeViewRelatedFunction(MethodeControllerMapping m,
             HttpServletRequest req, HttpServletResponse res) {
         try {
@@ -27,9 +28,9 @@ public class Executor {
             }
         } catch (NotAuthenticatedException e) {
             throw e;
-        } catch(NotAuthorizedException e){
+        } catch (NotAuthorizedException e) {
             throw e;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -56,18 +57,19 @@ public class Executor {
 
         } catch (NotAuthenticatedException e) {
             throw e;
-        } catch(NotAuthorizedException e){
+        } catch (NotAuthorizedException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-
     private static Object prepareAndInvoke(MethodeControllerMapping m,
             HttpServletRequest req, HttpServletResponse res) throws Exception {
-        Object controller = m.getClasse().getDeclaredConstructor().newInstance();
+        Object controller = ControllerInstance.getUniqueInstanceFromControllerName(m.getClasse().getSimpleName());
+        // singleton tokoa ve ?
+        // eny
+        System.out.println(controller);
         Method method = m.getMethod();
         NkSession session = SessionHandler.resolveSession(req);
         AuthentificationHandler.checkAuth(method, session);
@@ -93,6 +95,13 @@ public class Executor {
                 args[i] = req;
             } else if (paramType == HttpServletResponse.class) {
                 args[i] = res;
+            } else if (ApplicationContext.class.isAssignableFrom(paramType)) {
+                Object ctx = req.getServletContext().getAttribute("springContext");
+                if (ctx == null) {
+                    throw new RuntimeException(
+                            "Contexte Spring non démarré : vérifie le paramètre springPackages dans web.xml");
+                }
+                args[i] = ctx;
             } else {
                 String value = req.getParameter(parameter.getName());
                 if (value == null) {
@@ -103,4 +112,5 @@ public class Executor {
         }
         return args;
     }
+
 }

@@ -2,20 +2,14 @@ package main.java.utils;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.security.KeyStore.Entry;
 import java.util.ArrayList;
-import java.util.DuplicateFormatFlagsException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import jakarta.servlet.http.HttpSession;
 import main.java.core.MethodeControllerMapping;
 import main.java.core.MethodeHttp;
-import main.java.core.NkSession;
 import main.java.core.UrlMethodeHttpMapping;
 import main.java.exception.DuplicateUrlAndMethodException;
 import main.java.itu.annotation.ApiRest;
